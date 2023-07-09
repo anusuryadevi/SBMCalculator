@@ -1,18 +1,23 @@
 import './App.css';
 import Calc from './Calcuations';
 import { useState } from 'react';
+import Dashboard from './Dashboard';
+import Calc2 from './Calc2';
 
 function App() {
-  const [tableData, setTableData] = useState([{
-    key:'1',
-    count :'',
-    strength :'',
-    csp :''
-  }]) 
-  const [lastKey, setLastKey] = useState(1)
+
+  const [open, setOpen] = useState(false)
+  const [ calculator, setCalculator ] = useState(1)
   return (
     <div className="App">
-      <Calc tableData={tableData} setTableData={setTableData} lastKey={lastKey} setLastKey={setLastKey}/>
+      {
+        calculator === 1 ?
+
+          <Calc open={open} setOpen={setOpen} />
+          :
+          <Calc2 open={open} setOpen={setOpen}/>
+      }
+      <Dashboard open={open} setOpen={setOpen} setCalculator={setCalculator} calculator={calculator} />
     </div>
   );
 }

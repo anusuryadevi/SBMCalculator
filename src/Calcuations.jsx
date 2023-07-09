@@ -17,10 +17,16 @@ import { useRef } from 'react';
 import logo from './mills_logo.png';
 import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
+import { AppHeader1 } from './AppHeader';
 
 const Calc = (props) => {
-
-    const { tableData, setTableData, lastKey, setLastKey } = props
+    const [tableData, setTableData] = useState([{
+        key: '1',
+        count: '',
+        strength: '',
+        csp: ''
+    }])
+    const [lastKey, setLastKey] = useState(1)
     const defaultResult = {
         counts: '',
         strengths: '',
@@ -34,8 +40,8 @@ const Calc = (props) => {
         cspRes: '',
         countMin: '',
         countMax: '',
-        cspMin:'',
-        cspMax:''
+        cspMin: '',
+        cspMax: ''
     }
     const [result, setResult] = useState(defaultResult)
     const [oe, setOE] = useState('')
@@ -97,16 +103,17 @@ const Calc = (props) => {
 
     }, [tableData])
 
-    const addNewRow = (key) => {
-        setLastKey(key)
+    const addNewRow = () => {
+       
         setTableData((prev) => {
             return ([...prev, {
-                key,
+                key: lastKey+1,
                 count: '',
                 strength: '',
                 csp: ''
             }])
         })
+        setLastKey(lastKey+1)
     }
 
     const deleteRow = (key) => {
@@ -134,53 +141,39 @@ const Calc = (props) => {
 
         const doc = new jsPDF()
 
-        doc.addImage(logo,'png', 12, 10, 44, 20)
+        doc.addImage(logo, 'png', 13, 10, 44, 20)
         doc.setTextColor(0, 51, 153)
         doc.setFontSize(12)
         doc.text(`Date:  ${date.format('DD/MM/YYYY')}`, 60, 15);
         doc.text(`OE:  ${oe}`, 120, 15);
-        // Or use javascript directly:
+
         autoTable(doc, {
             head: [['Sno', 'Count', 'Strength', 'CSP']],
             body: [
                 ...tableContent
             ],
-            startY : 30
+            startY: 30
         })
 
         autoTable(doc, {
             // head: [[]],
             body: [
-                [`Min Count: ${result.countMin}`, `Avg Strength: ${result.strengthMean}`,`Min CSP: ${result.cspMin}`],
-                [`Max Count: ${result.countMax}`,'',`Max CSP: ${result.cspMax}`],
-                [`Avg Count: ${result.countMean}`,``,`Avg CSP: ${result.cspMean}`],
-                [`Range Count: ${result.countDev}`,``,`Range CSP: ${result.cspDev}`],
-                [`CV Count: ${result.countRes}`,``,`CV CSP: ${result.cspRes}`]
+                [`Min Count:   ${result.countMin}`, `Avg Strength:   ${result.strengthMean}`, `Min CSP:   ${result.cspMin}`],
+                [`Max Count:   ${result.countMax}`, '', `Max CSP:   ${result.cspMax}`],
+                [`Avg Count:   ${result.countMean}`, ``, `Avg CSP:   ${result.cspMean}`],
+                [`Range Count:   ${result.countDev}`, ``, `Range CSP:   ${result.cspDev}`],
+                [`CV Count:   ${result.countRes}`, ``, `CV CSP:   ${result.cspRes}`]
             ]
         })
 
-        doc.save('table.pdf')
+        doc.save(`cv_${date.format('DD_MM_YYYY')}.pdf`)
 
     };
     return <>
         <Box >
-            <div style={{ display: 'flex', minWidth: 400, maxWidth: 600, padding: 15, position: 'fixed', top: '0px', left: '0px', zIndex: 5, backgroundColor: '#ffff' }}>
-                <Box
-                    component="img"
-                    sx={{ height: 40 }}
-                    alt="Logo"
-                    src={logo}
-                />
-                <Typography variant='h6'>Calculations</Typography>
-                <div style={{ marginLeft: 'auto', marginRight: '30px' }}>
-                    <Button size='small' color='secondary' variant='contained' onClick={(e) => {
-                        addNewRow(lastKey + 1)
-                    }}
-                    >Add new Row</Button>
-                </div>
-            </div>
+            <AppHeader1 lastKey={lastKey} addNewRow={addNewRow} {...props} />
 
-            <div ref={pdfRef} style={{ position: 'fixed', top: '70px', left: '0px', backgroundColor: '#ffff', overflowY: 'scroll', height: 'calc(100vh - 106px)' }} >
+            <div ref={pdfRef} style={{ position: 'fixed', top: '70px', left: '0px', backgroundColor: '#ffff', overflowY: 'scroll', height: 'calc(100vh - 130px)' }} >
                 <Table stickyHeader aria-label="simple table" size="small"  >
                     <TableHead  >
                         <TableRow>
@@ -205,10 +198,10 @@ const Calc = (props) => {
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DatePicker label="date" focused format='DD/MM/YYYY'
                             value={date}
-                        onChange={(newdate) => setDate(newdate)}
+                            onChange={(newdate) => setDate(newdate)}
                         />
                         <TextField label="OE" focused value={oe}
-                        onChange={(e) => setOE(e.target.value)} 
+                            onChange={(e) => setOE(e.target.value)}
                         />
                     </LocalizationProvider>
                 </div>
