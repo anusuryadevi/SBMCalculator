@@ -10,42 +10,79 @@ const ResultRows = (props) => {
         countDev,
         cspDev,
         countRes,
-        cspRes } = props.result
-    
+        cspRes,
+        countMin,
+        countMax,
+        cspMin,
+        cspMax } = props.result
+    const cellStyle = {
+        paddingLeft: '6px',
+        paddingRight: '6px',
+    }
 
-       
+
     return <>
+      <TableRow>
+            <TableCell sx={{ ...cellStyle, width: '5%', padding: '0px' }} />
+
+            <TableCell sx={{ ...cellStyle }}>
+            <TextField label="Min Count" color="secondary" focused value={countMin} />
+            </TableCell>
+            <TableCell sx={{ ...cellStyle }}>
+                <TextField label="Avg Strength" color="secondary" focused value={strengthMean} />
+            </TableCell>
+            <TableCell sx={{ ...cellStyle }}>
+                <TextField label="Min CSP" color="secondary" focused value={cspMin} />
+            </TableCell>
+        </TableRow>
+          <TableRow>
+            <TableCell sx={{ ...cellStyle, width: '5%', padding: '0px' }} />
+
+            <TableCell sx={{ ...cellStyle }}>
+            <TextField label="Max Count" color="secondary" focused value={countMax} />
+            </TableCell>
+            <TableCell sx={{ ...cellStyle }}>
+              
+            </TableCell>
+            <TableCell sx={{ ...cellStyle }}>
+                <TextField label="Max CSP" color="secondary" focused value={cspMax} />
+            </TableCell>
+        </TableRow>
         <TableRow>
-            <TableCell>
+            <TableCell sx={{ ...cellStyle, width: '5%', padding: '0px' }} />
+
+            <TableCell sx={{ ...cellStyle }}>
                 <TextField label="Avg Count" color="secondary" focused value={countMean} />
             </TableCell>
-            <TableCell>
-                <TextField label="Avg Strength" color="secondary" focused  value={strengthMean} />
+            <TableCell sx={{ ...cellStyle }}>
+                
             </TableCell>
-            <TableCell>
+            <TableCell sx={{ ...cellStyle }}>
                 <TextField label="Avg CSP" color="secondary" focused value={cspMean} />
             </TableCell>
         </TableRow>
         <TableRow>
-            <TableCell>
-                <TextField label="Stdev" color="secondary" focused value={countDev} />
+            <TableCell sx={{ ...cellStyle, width: '5%', padding: '0px' }} />
+            <TableCell sx={{ ...cellStyle }}>
+                <TextField label="Range Count" color="secondary" focused value={countDev} />
             </TableCell>
-            <TableCell>
-
+            <TableCell sx={{ ...cellStyle }}>
+                
             </TableCell>
-            <TableCell>
-                <TextField label="Stdev" color="secondary" focused  value={cspDev} />
+            <TableCell sx={{ ...cellStyle }}>
+                <TextField label="Range CSP" color="secondary" focused value={cspDev} />
             </TableCell>
         </TableRow>
         <TableRow>
-            <TableCell>
-                <TextField label="Result" color="secondary" focused  value={countRes} />
+            <TableCell sx={{ ...cellStyle, width: '5%', padding: '0px' }} />
+            <TableCell sx={{ ...cellStyle }}>
+                <TextField label="CV Count" color="secondary" focused value={countRes} />
             </TableCell>
-            <TableCell>
-
+            <TableCell sx={{ ...cellStyle }}>
+               
             </TableCell>
-            <TableCell>
-                <TextField label="Result" color="secondary" focused  value={cspRes} />
+            <TableCell sx={{ ...cellStyle }}>
+                <TextField label="CV CSP" color="secondary" focused value={cspRes} />
             </TableCell>
         </TableRow>
     </>

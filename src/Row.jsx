@@ -4,8 +4,9 @@ import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { Typography } from '@mui/material';
 const Row = (props) => {
-    const { deleteRow, handleChange } = props
+    const { deleteRow, handleChange, index } = props
     const { rowData } = props
     const { key, count, strength, csp } = rowData
     const handleChangeLocal = (key, obj) => {
@@ -16,13 +17,19 @@ const Row = (props) => {
         handleChange(key, temp)
     }
 
-    const isValid =(value) =>{
+    const isValid = (value) => {
         return value ? false : true
     }
-
+    const cellStyle = {
+        paddingLeft : '6px',
+        paddingRight: '6px',
+    }
     return <>
         <TableRow key={key}>
-            <TableCell sx={{width:'30%'}}>
+            <TableCell sx={{ ...cellStyle,width: '5%', padding: '0px' }}>
+              <Typography variant='subtitle2' sx={{display:'flex',justifyContent:'center'}}>  {index+1} </Typography>
+            </TableCell>
+            <TableCell sx={{  ...cellStyle, width: '30%' }}>
                 <TextField
                     type='number'
                     id="count"
@@ -33,10 +40,10 @@ const Row = (props) => {
                         ...rowData,
                         count: parseFloat(e.target.value)
                     })}
-                    error = {isValid(count)}
+                    error={isValid(count)}
                 />
             </TableCell>
-            <TableCell >
+            <TableCell sx={{...cellStyle}} >
                 <TextField
                     type='number'
                     id="strength"
@@ -47,10 +54,10 @@ const Row = (props) => {
                         ...rowData,
                         strength: parseFloat(e.target.value)
                     })}
-                    error = {isValid(strength)}
+                    error={isValid(strength)}
                 />
             </TableCell>
-            <TableCell>
+            <TableCell sx={{...cellStyle}}>
                 <TextField
                     id="csp"
                     label=""
@@ -59,8 +66,8 @@ const Row = (props) => {
                     size="small"
                 />
             </TableCell>
-            <TableCell sx={{padding:'0px'}}>
-                <IconButton aria-label="delete" size="large" sx={{padding:'0px'}} color='error' onClick={(e) => {
+            <TableCell sx={{...cellStyle, padding: '0px', width:'5%' }}>
+                <IconButton aria-label="delete" size="large" sx={{ padding: '0px' }} color='error' onClick={(e) => {
                     deleteRow(key)
                 }}>
                     <DeleteIcon fontSize="inherit" />
