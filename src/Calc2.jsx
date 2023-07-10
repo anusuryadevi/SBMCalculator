@@ -139,7 +139,7 @@ const Calc2 = (props) => {
             // head: [[]],
             body: [
                 [`Avg N:   ${result.caneAvg}`, `Avg N-1:   ${result.caneMinusAvg}`, `Avg N+1:   ${result.canePlusAvg}`],
-                [`Percentage:   ${result.result}`, '', ``],
+                [`A Percentage:   ${result.result}`, '', ``],
             ]
         })
 
