@@ -40,7 +40,7 @@ const Dashboard = (props) => {
                 </ListItem>
                 <ListItem key={2} disablePadding>
                     <ListItemButton onClick={(e)=>handleSelect(2)}>
-                        <ListItemText primary={'A%'} />
+                        <ListItemText primary={'A Percentage'} />
                     </ListItemButton>
                 </ListItem>
             </List>

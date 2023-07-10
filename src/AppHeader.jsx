@@ -13,7 +13,7 @@ const AppHeader1 = (props) =>{
                     alt="Logo"
                     src={logo}
                 />
-                <Typography variant='h6'>Calculations</Typography>
+                <Typography variant='h6'>Count CSP</Typography>
                 <div style={{ marginLeft: 'auto', marginRight: '30px' }}>
                     <Button size='small' color='secondary' variant='contained' onClick={(e) => {
                         addNewRow()
@@ -27,7 +27,7 @@ const AppHeader1 = (props) =>{
 const AppHeader2 = (props) =>{
     const { addNewRow, setOpen} = props
     return <>
-     <div style={{ display: 'flex', minWidth: 400, maxWidth: 600, padding: 15, position: 'fixed', top: '0px', left: '0px', zIndex: 5, backgroundColor: '#ffff' }}>
+     <div style={{ display: 'flex', minWidth: 400, maxWidth: 600, padding: 15, position: 'fixed', top: '0px', left: '0px', zIndex: 5, backgroundColor: '#ffff',gap:'5px'}}>
               <MenuIcon sx={{paddingRight:'12px'}} onClick={(e)=>setOpen(true)}/>
                 <Box
                     component="img"
@@ -35,7 +35,7 @@ const AppHeader2 = (props) =>{
                     alt="Logo"
                     src={logo}
                 />
-                <Typography variant='h6'>Calculations</Typography>
+                <Typography variant='h6'>A %</Typography>
                 <div style={{ marginLeft: 'auto', marginRight: '30px' }}>
                     <Button size='small' color='secondary' variant='contained' onClick={(e) => {
                         addNewRow()

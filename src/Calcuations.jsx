@@ -173,7 +173,7 @@ const Calc = (props) => {
         <Box >
             <AppHeader1 lastKey={lastKey} addNewRow={addNewRow} {...props} />
 
-            <div ref={pdfRef} style={{ position: 'fixed', top: '70px', left: '0px', backgroundColor: '#ffff', overflowY: 'scroll', height: 'calc(100vh - 130px)' }} >
+            <div ref={pdfRef} style={{ position: 'fixed', top: '70px', left: '0px', backgroundColor: '#ffff', overflowY: 'auto', height: 'calc(100vh - 130px)' }} >
                 <Table stickyHeader aria-label="simple table" size="small"  >
                     <TableHead  >
                         <TableRow>
