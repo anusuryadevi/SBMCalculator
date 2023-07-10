@@ -143,7 +143,7 @@ const Calc2 = (props) => {
             ]
         })
 
-        doc.save(`A%_${date.format('DD_MM_YYYY')}.pdf`)
+        doc.save(`A_Percentage_${date.format('DD_MM_YYYY')}.pdf`)
 
     };
     return <>
