@@ -61,8 +61,8 @@ const Calc2 = (props) => {
         let n = canes.length
         if (n > 0) {
             let caneAvg = (canes.reduce((a, b) => a + b, 0) / n).toFixed(6)
-            let canePlusAvg = (caneMinus1s.reduce((a, b) => a + b, 0) / n).toFixed(6)
-            let caneMinusAvg = (canePlus1s.reduce((a, b) => a + b, 0) / n).toFixed(6)
+            let canePlusAvg = (canePlus1s.reduce((a, b) => a + b, 0) / n).toFixed(6)
+            let caneMinusAvg = (caneMinus1s.reduce((a, b) => a + b, 0) / n).toFixed(6)
 
             let result = ((caneMinusAvg - canePlusAvg) / caneAvg) * 100
 
