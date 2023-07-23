@@ -5,7 +5,7 @@ import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Row from './Row';
-import { Box, Button, TextField, Typography } from '@mui/material';
+import { Box, Button, Checkbox, FormControlLabel, TextField, Typography } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -19,7 +19,9 @@ import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
 import { AppHeader1 } from './AppHeader';
 
+
 const Calc = (props) => {
+    const [coarser, setCoarser] = useState(false)
     const [tableData, setTableData] = useState([{
         key: '1',
         count: '',
@@ -101,19 +103,19 @@ const Calc = (props) => {
             setResult(defaultResult)
         }
 
-    }, [tableData])
+    }, [tableData, coarser])
 
     const addNewRow = () => {
-       
+
         setTableData((prev) => {
             return ([...prev, {
-                key: lastKey+1,
+                key: lastKey + 1,
                 count: '',
                 strength: '',
                 csp: ''
             }])
         })
-        setLastKey(lastKey+1)
+        setLastKey(lastKey + 1)
     }
 
     const deleteRow = (key) => {
@@ -133,7 +135,7 @@ const Calc = (props) => {
         })
     }
 
-
+   
     const downloadAsPDF = () => {
         let tableContent = tableData.map((obj, index) => {
             return [index + 1, obj.count, obj.strength, obj.csp]
@@ -187,7 +189,7 @@ const Calc = (props) => {
                     <TableBody>
                         {
                             tableData.map((r, index) => {
-                                return <Row rowData={r} key={r.key} deleteRow={deleteRow} handleChange={handleChange} index={index} />
+                                return <Row rowData={r} key={r.key} deleteRow={deleteRow} handleChange={handleChange} index={index} coarser={coarser} />
                             })
                         }
                         <ResultRows result={result} />
@@ -203,6 +205,13 @@ const Calc = (props) => {
                         <TextField label="OE" focused value={oe}
                             onChange={(e) => setOE(e.target.value)}
                         />
+                        <FormControlLabel
+                            value="Coarser"
+                            control={<Checkbox checked={coarser} onChange={() => setCoarser((prev) => !prev)} />}
+                            label="Coarser"
+                            labelPlacement="end"
+                        />
+
                     </LocalizationProvider>
                 </div>
                 <div style={{ display: 'flex', gap: '16px' }}>
