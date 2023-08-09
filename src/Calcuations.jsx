@@ -180,7 +180,7 @@ const Calc = (props) => {
         autoTable(doc, {
             // head: [[]],
            
-            styles: { fontStyle:'bold',fontSize: 12 },
+            styles: { fontStyle:'bold',fontSize: 15 },
             body: [
                 [`Min Count:   ${result.countMin}`, `Avg Strength:   ${Math.round(result.strengthMean)}`, `Min CSP:   ${Math.round(result.cspMin)}`],
                 [`Max Count:   ${result.countMax}`, '', `Max CSP:   ${Math.round(result.cspMax)}`],

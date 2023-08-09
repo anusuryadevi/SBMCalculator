@@ -157,7 +157,7 @@ const Calc2 = (props) => {
         autoTable(doc, {
             // head: [[]],
             
-            styles: { fontStyle:'bold',fontSize: 12 },
+            styles: { fontStyle:'bold',fontSize: 15 },
             body: [
                 [`Avg N:   ${round(result.caneAvg,2)}`, `Avg N-1:   ${round(result.caneMinusAvg,2)}`, `Avg N+1:   ${round(result.canePlusAvg,2)}`],
                 [`A Percentage:   ${round(result.result,2)}`, '', ``],
