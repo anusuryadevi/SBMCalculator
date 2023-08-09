@@ -135,6 +135,24 @@ const Calc = (props) => {
         })
     }
 
+    const round = (value, exp)=> {
+        if (typeof exp === 'undefined' || +exp === 0)
+          return Math.round(value);
+      
+        value = +value;
+        exp = +exp;
+      
+        if (isNaN(value) || !(typeof exp === 'number' && exp % 1 === 0))
+          return NaN;
+      
+        // Shift
+        value = value.toString().split('e');
+        value = Math.round(+(value[0] + 'e' + (value[1] ? (+value[1] + exp) : exp)));
+      
+        // Shift back
+        value = value.toString().split('e');
+        return +(value[0] + 'e' + (value[1] ? (+value[1] - exp) : -exp));
+      };
    
     const downloadAsPDF = () => {
         let tableContent = tableData.map((obj, index) => {
@@ -150,6 +168,8 @@ const Calc = (props) => {
         doc.text(`OE:  ${oe}`, 120, 15);
 
         autoTable(doc, {
+            theme: 'grid',
+            styles: { fontStyle:'bold',fontSize: 12 },
             head: [['Sno', 'Count', 'Strength', 'CSP']],
             body: [
                 ...tableContent
@@ -159,12 +179,14 @@ const Calc = (props) => {
 
         autoTable(doc, {
             // head: [[]],
+           
+            styles: { fontStyle:'bold',fontSize: 12 },
             body: [
-                [`Min Count:   ${result.countMin}`, `Avg Strength:   ${result.strengthMean}`, `Min CSP:   ${result.cspMin}`],
-                [`Max Count:   ${result.countMax}`, '', `Max CSP:   ${result.cspMax}`],
-                [`Avg Count:   ${result.countMean}`, ``, `Avg CSP:   ${result.cspMean}`],
-                [`Range Count:   ${result.countDev}`, ``, `Range CSP:   ${result.cspDev}`],
-                [`CV Count:   ${result.countRes}`, ``, `CV CSP:   ${result.cspRes}`]
+                [`Min Count:   ${result.countMin}`, `Avg Strength:   ${Math.round(result.strengthMean)}`, `Min CSP:   ${Math.round(result.cspMin)}`],
+                [`Max Count:   ${result.countMax}`, '', `Max CSP:   ${Math.round(result.cspMax)}`],
+                [`Avg Count:   ${round(result.countMean,2)}`, ``, `Avg CSP:   ${Math.round(result.cspMean)}`],
+                [`Range Count:   ${round(result.countDev,2)}`, ``, `Range CSP:   ${Math.round(result.cspDev)}`],
+                [`CV Count:   ${round(result.countRes,2)}`, ``, `CV CSP:   ${Math.round(result.cspRes)}`]
             ]
         })
 

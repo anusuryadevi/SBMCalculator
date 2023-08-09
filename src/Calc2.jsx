@@ -112,7 +112,24 @@ const Calc2 = (props) => {
             })
         })
     }
-
+    const round = (value, exp)=> {
+        if (typeof exp === 'undefined' || +exp === 0)
+          return Math.round(value);
+      
+        value = +value;
+        exp = +exp;
+      
+        if (isNaN(value) || !(typeof exp === 'number' && exp % 1 === 0))
+          return NaN;
+      
+        // Shift
+        value = value.toString().split('e');
+        value = Math.round(+(value[0] + 'e' + (value[1] ? (+value[1] + exp) : exp)));
+      
+        // Shift back
+        value = value.toString().split('e');
+        return +(value[0] + 'e' + (value[1] ? (+value[1] - exp) : -exp));
+      };
 
     const downloadAsPDF = () => {
         let tableContent = tableData.map((obj, index) => {
@@ -129,6 +146,8 @@ const Calc2 = (props) => {
         // Or use javascript directly:
         autoTable(doc, {
             head: [['Sno', 'N', 'N - 1', 'N + 1']],
+            theme: 'grid',
+            styles: { fontStyle:'bold',fontSize: 12 },
             body: [
                 ...tableContent
             ],
@@ -137,9 +156,11 @@ const Calc2 = (props) => {
 
         autoTable(doc, {
             // head: [[]],
+            
+            styles: { fontStyle:'bold',fontSize: 12 },
             body: [
-                [`Avg N:   ${result.caneAvg}`, `Avg N-1:   ${result.caneMinusAvg}`, `Avg N+1:   ${result.canePlusAvg}`],
-                [`A Percentage:   ${result.result}`, '', ``],
+                [`Avg N:   ${round(result.caneAvg,2)}`, `Avg N-1:   ${round(result.caneMinusAvg,2)}`, `Avg N+1:   ${round(result.canePlusAvg,2)}`],
+                [`A Percentage:   ${round(result.result,2)}`, '', ``],
             ]
         })
 
