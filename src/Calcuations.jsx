@@ -76,11 +76,11 @@ const Calc = (props) => {
             let cspMin = Math.min(...csps)
             let cspMax = Math.max(...csps)
 
-            let countDev = countMax - countMin;
-            let cspDev = cspMax - cspMin;
+            let countDev = countMax -countMin;
+            let cspDev = cspMax -cspMin;
 
-            let countRes = ((countDev / countMean) * 100).toFixed(6)
-            let cspRes = ((cspDev / cspMean) * 100).toFixed(6)
+            let countRes = (((n > 1 ? Math.sqrt(counts.map(x => Math.pow(x - countMean, 2)).reduce((a, b) => a + b, 0) / (n - 1)).toFixed(6) : 0) / countMean) * 100).toFixed(6)
+            let cspRes = (((n > 1 ? Math.sqrt(csps.map(x => Math.pow(x - cspMean, 2)).reduce((a, b) => a + b, 0) / (n - 1)).toFixed(6) : 0) / cspMean) * 100).toFixed(6)
 
             setResult({
                 counts,
