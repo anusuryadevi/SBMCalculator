@@ -14,8 +14,8 @@ import { styled, useTheme } from '@mui/material/styles';
 
 const Dashboard = (props) => {
     const theme = useTheme();
-    const { open, setOpen, setCalculator ,calculator} = props
-    const handleSelect = (key) =>{
+    const { open, setOpen, setCalculator, calculator } = props
+    const handleSelect = (key) => {
         setCalculator(key)
         setOpen(false)
     }
@@ -34,13 +34,23 @@ const Dashboard = (props) => {
             <Divider />
             <List>
                 <ListItem key={1} disablePadding>
-                    <ListItemButton onClick={(e)=>handleSelect(1)}>
+                    <ListItemButton onClick={(e) => handleSelect(1)}>
                         <ListItemText primary={'Count CSP'} />
                     </ListItemButton>
                 </ListItem>
                 <ListItem key={2} disablePadding>
-                    <ListItemButton onClick={(e)=>handleSelect(2)}>
+                    <ListItemButton onClick={(e) => handleSelect(2)}>
                         <ListItemText primary={'A Percentage'} />
+                    </ListItemButton>
+                </ListItem>
+                <ListItem key={3} disablePadding>
+                    <ListItemButton onClick={(e) => handleSelect(3)}>
+                        <ListItemText primary={'TM to TPI'} />
+                    </ListItemButton>
+                </ListItem>
+                <ListItem key={4} disablePadding>
+                    <ListItemButton onClick={(e) => handleSelect(4)}>
+                        <ListItemText primary={'Production'} />
                     </ListItemButton>
                 </ListItem>
             </List>
