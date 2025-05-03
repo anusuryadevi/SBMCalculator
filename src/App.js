@@ -5,6 +5,7 @@ import Dashboard from './Dashboard';
 import Calc2 from './Calc2';
 import TMTOTPI from './TMTOTPI';
 import Production from './Production';
+import Speed from './SpeedToDelivery';
 
 function App() {
 
@@ -18,8 +19,10 @@ function App() {
           <Calc open={open} setOpen={setOpen} />
           : calculator === 2 ?
             <Calc2 open={open} setOpen={setOpen} /> : calculator === 3 ?
-            <TMTOTPI open={open} setOpen={setOpen} /> :
-            <Production open={open} setOpen={setOpen} />
+            <TMTOTPI open={open} setOpen={setOpen} /> : calculator === 4 ?
+            <Production open={open} setOpen={setOpen} />:
+            <Speed open={open} setOpen={setOpen} />
+
 
       }
       <Dashboard open={open} setOpen={setOpen} setCalculator={setCalculator} calculator={calculator} />
