@@ -181,7 +181,7 @@ const Production = (props) => {
      });
 
         //change
-        doc.save(`A_Percentage_${date.format('DD_MM_YYYY')}.pdf`)
+        doc.save(`Production_report${date.format('DD_MM_YYYY')}.pdf`)
 
     };
 
