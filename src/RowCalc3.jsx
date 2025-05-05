@@ -96,7 +96,6 @@ const RowCalc3 = (props) => {
                         >
                             <MenuItem value={1}>Day</MenuItem>
                             <MenuItem value={2}>Night</MenuItem>
-
                         </Select>
                     </FormControl>
 
