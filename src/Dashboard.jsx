@@ -53,6 +53,11 @@ const Dashboard = (props) => {
                         <ListItemText primary={'Production'} />
                     </ListItemButton>
                 </ListItem>
+                <ListItem key={5} disablePadding>
+                    <ListItemButton onClick={(e) => handleSelect(5)}>
+                        <ListItemText primary={'Speed to Delivery'} />
+                    </ListItemButton>
+                </ListItem>
             </List>
 
         </Drawer>

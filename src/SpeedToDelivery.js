@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { AppHeader3 } from "./AppHeader";
+import { AppHeader5 } from "./AppHeader";
 import { useRef } from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -16,7 +16,7 @@ import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
 
 
-const TMTOTPI = (props) => {
+const Speed = (props) => {
     const [formData, setFormData] = useState({
         count: '',
         tm: '',
@@ -38,12 +38,11 @@ const TMTOTPI = (props) => {
     function handleChange(e) {
         const tempData = { ...formData, [e.target.name]: e.target.value }
         setFormData(tempData);
-        if (tempData.count > 0 && tempData.tm > 0 && tempData.speed > 0) {
-            tempData.tpi = (Math.sqrt(tempData.count) * tempData.tm).toFixed(5);
+        if (tempData.tpi > 0 && tempData.speed > 0) {
+          
             tempData.delivery = (tempData.speed / tempData.tpi / 39.5).toFixed(5);
         } else {
-            tempData.tpi = '';
-            tempData.delivery = '';
+             tempData.delivery = '';
         }
         setFormData(tempData);
     }
@@ -51,15 +50,15 @@ const TMTOTPI = (props) => {
    
     return <>
         <Box >
-            <AppHeader3   {...props} />
+            <AppHeader5   {...props} />
 
             <div style={{ position: 'fixed', top: '70px', left: '0px', backgroundColor: '#ffff', overflowY: 'auto', height: 'calc(100vh - 130px)' }} >
                 <Table stickyHeader aria-label="simple table" size="small"  >
                     <TableHead  >
                         <TableRow>
-                            <TableCell sx={{ width: '33%' }} align="center"><Typography variant='body1'>Actual Count</Typography></TableCell>
-                            <TableCell sx={{ width: '33%' }} align="center"><Typography variant='body1'>TM</Typography></TableCell>
-                            <TableCell sx={{ width: '34%' }} align="center"><Typography variant='body1'>Speed</Typography></TableCell>
+                            <TableCell sx={{ width: '33%' }} align="center"><Typography variant='body1'>Speed</Typography></TableCell>
+                            <TableCell sx={{ width: '33%' }} align="center"><Typography variant='body1'>TPI</Typography></TableCell>
+                            <TableCell sx={{ width: '34%' }} align="center"><Typography variant='body1'>Delivery</Typography></TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -68,51 +67,33 @@ const TMTOTPI = (props) => {
                             <TableCell sx={{ ...cellStyle, width: '33.3%' }}>
                                 <TextField
                                     type='number'
-                                    id="count"
-                                    label=""
-                                    value={formData.count}
-                                    name="count"
-                                    size="small"
-                                    onChange={(e) => handleChange(e)}
-                                    error={isValid(formData.count)}
-                                />
-                            </TableCell>
-                            <TableCell sx={{ ...cellStyle }} >
-                                <TextField
-                                    type='number'
-                                    id="tm"
-                                    label=""
-                                    name="tm"
-                                    value={formData.tm}
-                                    size="small"
-                                    onChange={(e) => handleChange(e)}
-                                    error={isValid(formData.tm)}
-                                />
-                            </TableCell>
-                            <TableCell sx={{ ...cellStyle }}>
-                                <TextField
-                                    type='number'
                                     id="speed"
                                     label=""
-                                    name="speed"
                                     value={formData.speed}
+                                    name="speed"
                                     size="small"
                                     onChange={(e) => handleChange(e)}
                                     error={isValid(formData.speed)}
                                 />
                             </TableCell>
-
-                        </TableRow>
-                        <TableRow>
-
-                            <TableCell sx={{ ...cellStyle }}>
-                                <TextField label="TPI" color="secondary" focused value={formData.tpi} />
+                            <TableCell sx={{ ...cellStyle }} >
+                                <TextField
+                                    type='number'
+                                    id="tpi"
+                                    label=""
+                                    name="tpi"
+                                    value={formData.tpi}
+                                    size="small"
+                                    onChange={(e) => handleChange(e)}
+                                    error={isValid(formData.tpi)}
+                                />
                             </TableCell>
                             <TableCell sx={{ ...cellStyle }}>
-                                <TextField label="Delivery" color="secondary" focused value={formData.delivery} />
+                            <TextField label="Delivery" color="secondary" focused value={formData.delivery} />
                             </TableCell>
 
                         </TableRow>
+                  
                     </TableBody>
                 </Table>
 
@@ -123,4 +104,4 @@ const TMTOTPI = (props) => {
     </>
 }
 
-export default TMTOTPI
+export default Speed

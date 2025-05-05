@@ -85,4 +85,21 @@ const AppHeader4 = (props) =>{
     </>
 }
 
-export  {AppHeader1, AppHeader2,AppHeader3,AppHeader4}
+const AppHeader5 = (props) =>{
+    const {  setOpen} = props
+    return <>
+     <div style={{ display: 'flex', minWidth: 400, maxWidth: 600, padding: 15, position: 'fixed', top: '0px', left: '0px', zIndex: 5, backgroundColor: '#ffff',gap:'5px'}}>
+              <MenuIcon sx={{paddingRight:'12px'}} onClick={(e)=>setOpen(true)}/>
+                <Box
+                    component="img"
+                    sx={{ height: 40 }}
+                    alt="Logo"
+                    src={logo}
+                />
+                <Typography variant='h6'>Speed to Delivery</Typography>
+              
+            </div>
+    </>
+}
+
+export  {AppHeader1, AppHeader2,AppHeader3,AppHeader4,AppHeader5}

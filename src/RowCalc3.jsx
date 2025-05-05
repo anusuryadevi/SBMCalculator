@@ -8,9 +8,9 @@ import { Box, FormControl, InputLabel, MenuItem, NativeSelect, Select, Typograph
 const RowCalc3 = (props) => {
     const { deleteRow, handleChange, index } = props
     const { rowData } = props
-    const { key, OE, SDE, Count, Colour, ActualCount, No_of_Rotors, Delivery, Hours, Actual_Pro, Eff, Target } = rowData
+    const { key, OE, SDE,time, Count, Colour, ActualCount, No_of_Rotors, Delivery, Hours, Actual_Pro, Eff, Target,remark } = rowData
     const handleChangeLocal = (key, obj) => {
-        isAllfilled() && CalculateResults(obj)        
+         CalculateResults(obj)        
         handleChange(key, obj);    
       
     }
@@ -85,6 +85,20 @@ const RowCalc3 = (props) => {
 
                         </Select>
                     </FormControl>
+                    <FormControl sx={{ width: '30%' }}>
+                        <InputLabel id="demo-time-select-label">Shift</InputLabel>
+                        <Select
+                            labelId="demo-time-select-label"
+                            id="demo-time-select"
+                            value={time}
+                            label="time"
+                            onChange={(e) => handleChangeLocal(key, { ...rowData, time: e.target.value })}
+                        >
+                            <MenuItem value={1}>Day</MenuItem>
+                            <MenuItem value={2}>Night</MenuItem>
+
+                        </Select>
+                    </FormControl>
 
                     {/* <TextField label="SDE" color="secondary" focused value={SDE} sx={{ width: '30%' }} onChange={(e) => handleChangeLocal(key, { ...rowData, SDE: e.target.value })} /> */}
                     <TextField label="Count" color="secondary" focused value={Count} sx={{ width: '30%' }} onChange={(e) => handleChangeLocal(key, { ...rowData, Count: e.target.value })} error={isValid(Count)}/>
@@ -94,6 +108,7 @@ const RowCalc3 = (props) => {
                     <TextField label="Delivery" color="secondary" focused value={Delivery} sx={{ width: '30%' }} onChange={(e) => handleChangeLocal(key, { ...rowData, Delivery: e.target.value })} error={isValid(Delivery)}/>
                     <TextField label="Hours" color="secondary" focused value={Hours} sx={{ width: '30%' }} onChange={(e) => handleChangeLocal(key, { ...rowData, Hours: e.target.value })} error={isValid(Hours)}/>
                     <TextField label="Actual_Pro" color="secondary" focused value={Actual_Pro} sx={{ width: '30%' }} onChange={(e) => handleChangeLocal(key, { ...rowData, Actual_Pro: e.target.value })} error={isValid(Actual_Pro)}/>
+                    <TextField label="Remarks" color="secondary" focused value={remark} sx={{ width: '60%' }} onChange={(e) => handleChangeLocal(key, { ...rowData, remark: e.target.value })} />
                 </Box>
                 <Box sx={{
                     display: 'flex',

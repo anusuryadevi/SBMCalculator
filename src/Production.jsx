@@ -83,29 +83,102 @@ const Production = (props) => {
     };
 
     const downloadAsPDF = () => {
-      
+      console.log(tableData);
         let tableContent = tableData.map((obj, index) => {
             const side =obj.SDE==1?"Left":"Right";
-            return [index + 1, obj.OE, side, obj.Count,obj.Colour,obj.ActualCount,obj.No_of_Rotors,obj.Delivery,obj.Hours,round(obj.Target,2),obj.Actual_Pro,round(obj.Eff,2)+"%"]
+            const time =obj.time==1?"Day":"Night";
+            return [index + 1, obj.OE, side, obj.Count,obj.Colour,obj.ActualCount,obj.No_of_Rotors,obj.Delivery,obj.Hours,round(obj.Target,2),obj.Actual_Pro,round(obj.Eff,2)+"%",obj.remark,time]
         })
+        let data;
+        let colorCount=new Map();
+        for (const data of tableData){
+            let key=data.Count+'_'+data.Colour;
+            key=key.toUpperCase();
+            if(colorCount.has(key)){
+                let {target,actual,Eff} = colorCount.get(key);
+                target+=data.Target;
+                actual=parseInt(actual)+ parseInt(data.Actual_Pro);
+                Eff=[...Eff,data.Eff];
+                colorCount.set(key,{"count":data.Count,"color":data.Colour,"target":target,"actual":actual,"Eff":Eff})
+            }else {
+                colorCount.set(key,{"count":data.Count,"color":data.Colour,"target":data.Target,"actual":data.Actual_Pro,"Eff":[data.Eff]})
+            }
+
+        }
+        
+        let finalArray=[];
+        for ( let [key,value] of colorCount){
+           let total= value.Eff.reduce((total,num)=>{
+                return   total+num;
+            },0);
+            console.log(value.Eff,total);
+            total=total/(value.Eff.length);
+            console.log(total);
+
+
+            finalArray.push([value.count,value.color,round(value.target,2),round(value.actual,2),round(total,2)+"%"])
+        }
+        
+        const dayShift=tableContent.filter((obj)=>{
+            if(obj[13] =="Night"){
+                return false;
+            }
+            return true;
+        });
+
+        const nightShift=tableContent.filter((obj)=>{
+            if(obj[13] =="Night"){
+                return true;
+            }
+            return false;
+        });
 
         const doc = new jsPDF()
 
         doc.addImage(logo, 'png', 13, 10, 44, 20)
         doc.setTextColor(0, 51, 153)
-        doc.setFontSize(8)
+       
         doc.text(`Date:  ${date.format('DD/MM/YYYY')}`, 60, 15);
+        doc.setFontSize(16)
+        doc.text(`Day Shift`, 100, 30);
       
         // Or use javascript directly:
         autoTable(doc, {
-            head: [['Index','OE', 'Side', 'Count', 'Colour','Actual Count','No of rotors','Delivery','Hours','Target',"Actual Production","Efficiency"]],
+            head: [['Index','OE', 'Side', 'Count', 'Colour','Actual Count','No of rotors','Delivery','Hours','Target',"Actual Production","Efficiency","Remarks"]],
             theme: 'grid',
             styles: { fontStyle: 'bold', fontSize: 8 },
             body: [
-                ...tableContent
+                ...dayShift
             ],
-            startY: 30
-        })
+            startY: 40
+        });
+        let finalY = doc.lastAutoTable.finalY;
+        
+        doc.text(`Night Shift`,100,finalY+15);
+           // Or use javascript directly:
+           autoTable(doc, {
+            head: [['Index','OE', 'Side', 'Count', 'Colour','Actual Count','No of rotors','Delivery','Hours','Target',"Actual Production","Efficiency","Remarks"]],
+            theme: 'grid',
+            styles: { fontStyle: 'bold', fontSize: 8 },
+            body: [
+                ...nightShift
+            ],
+            startY: finalY+25
+        });
+
+        finalY = doc.lastAutoTable.finalY;
+
+        doc.text(`Final Result`,100,finalY+15);
+        // Or use javascript directly:
+        autoTable(doc, {
+         head: [['Count', 'Colour', 'Target', 'Actual','Eff']],
+         theme: 'grid',
+         styles: { fontStyle: 'bold', fontSize: 8 },
+         body: [
+             ...finalArray
+         ],
+         startY: finalY+25
+     });
 
         //change
         doc.save(`A_Percentage_${date.format('DD_MM_YYYY')}.pdf`)
