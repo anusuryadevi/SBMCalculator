@@ -83,103 +83,148 @@ const Production = (props) => {
     };
 
     const downloadAsPDF = () => {
-      console.log(tableData);
-        let tableContent = tableData.map((obj, index) => {
-            const side =obj.SDE==1?"Left":"Right";
-            const time =obj.time==1?"Day":"Night";
-            return [index + 1, obj.OE, side, obj.Count,obj.Colour,obj.ActualCount,obj.No_of_Rotors,obj.Delivery,obj.Hours,round(obj.Target,2),obj.Actual_Pro,round(obj.Eff,2)+"%",obj.remark,time]
+
+        let tableContent = tableData.map((obj) => {
+            const side = obj.SDE == 1 ? "L" : "R";
+            const time = obj.time == 1 ? "Day" : "Night";
+            const item = obj.Colour + "_" + obj.Count;
+            return [obj.OE, side, item, obj.ActualCount, obj.No_of_Rotors, obj.Delivery, obj.Hours, round(obj.Target, 2), obj.Actual_Pro, round(obj.Eff, 2) + "%", obj.remark, time]
         })
         let data;
-        let colorCount=new Map();
-        for (const data of tableData){
-            let key=data.Count+'_'+data.Colour;
-            key=key.toUpperCase();
-            if(colorCount.has(key)){
-                let {target,actual,Eff} = colorCount.get(key);
-                target+=data.Target;
-                actual=parseInt(actual)+ parseInt(data.Actual_Pro);
-                Eff=[...Eff,data.Eff];
-                colorCount.set(key,{"count":data.Count,"color":data.Colour,"target":target,"actual":actual,"Eff":Eff})
-            }else {
-                colorCount.set(key,{"count":data.Count,"color":data.Colour,"target":data.Target,"actual":data.Actual_Pro,"Eff":[data.Eff]})
+        let colorCount = new Map();
+        for (const data of tableData) {
+            let key = data.Count + '_' + data.Colour;
+            key = key.toUpperCase();
+            if (colorCount.has(key)) {
+                let { target, actual, Eff } = colorCount.get(key);
+                target += data.Target;
+                actual = parseInt(actual) + parseInt(data.Actual_Pro);
+                Eff = [...Eff, data.Eff];
+                colorCount.set(key, { "count": data.Count, "color": data.Colour, "target": target, "actual": actual, "Eff": Eff })
+            } else {
+                colorCount.set(key, { "count": data.Count, "color": data.Colour, "target": data.Target, "actual": data.Actual_Pro, "Eff": [data.Eff] })
             }
 
         }
-        
-        let finalArray=[];
-        for ( let [key,value] of colorCount){
-           let total= value.Eff.reduce((total,num)=>{
-                return   total+num;
-            },0);
-            console.log(value.Eff,total);
-            total=total/(value.Eff.length);
-            console.log(total);
+        let finalProTotal = 0, finalEffTotal = 0;
 
-
-            finalArray.push([value.count,value.color,round(value.target,2),round(value.actual,2),round(total,2)+"%"])
+        let finalArray = [];
+        for (let [key, value] of colorCount) {
+            let total = value.Eff.reduce((total, num) => {
+                return total + num;
+            }, 0);
+            //  console.log(value.Eff, total);
+            total = total / (value.Eff.length);
+            //  console.log(total);
+            finalProTotal += round(value.actual, 2);
+            finalEffTotal += round(total, 2);
+            const item = value.color + "_" + value.count;
+            finalArray.push([item, round(value.target, 2), round(value.actual, 2), round(total, 2) + "%"])
         }
-        
-        const dayShift=tableContent.filter((obj)=>{
-            if(obj[13] =="Night"){
+
+        const dayShift = tableContent.filter((obj) => {
+            if (obj[11] == "Night") {
                 return false;
             }
             return true;
         });
+        let dayProTotal = 0, dayEffTotal = 0;
+        let nightProTotal = 0, nightEffTotal = 0;
+        tableData.map((item) => {
+            if (item.time == 1) {
+                dayProTotal += parseInt(item.Actual_Pro); dayEffTotal += item.Eff;
+            } else {
+                nightProTotal += parseInt(item.Actual_Pro); nightEffTotal += item.Eff;
+            }
 
-        const nightShift=tableContent.filter((obj)=>{
-            if(obj[13] =="Night"){
+        });
+        if (dayShift.length > 0) {
+            dayEffTotal = dayEffTotal / dayShift.length;
+             dayEffTotal=round(dayEffTotal,2);
+        }
+
+
+        const nightShift = tableContent.filter((obj) => {
+            if (obj[11] == "Night") {
                 return true;
             }
             return false;
         });
 
+
+        if (nightShift.length > 0) {
+            nightEffTotal = nightEffTotal / nightShift.length;
+             nightEffTotal=round(nightEffTotal,2);
+        }
+
+
         const doc = new jsPDF()
 
         doc.addImage(logo, 'png', 13, 10, 44, 20)
         doc.setTextColor(0, 51, 153)
-       
+
         doc.text(`Date:  ${date.format('DD/MM/YYYY')}`, 60, 15);
         doc.setFontSize(16)
         doc.text(`Day Shift`, 100, 30);
-      
+
         // Or use javascript directly:
         autoTable(doc, {
-            head: [['Index','OE', 'Side', 'Count', 'Colour','Actual Count','No of rotors','Delivery','Hours','Target',"Actual Production","Efficiency","Remarks"]],
+            head: [['OE', 'Side', 'Item', 'AC', 'ROT', 'DEL', 'HRS', 'TAR', "PRO", "EFF", "Remarks"]],
             theme: 'grid',
-            styles: { fontStyle: 'bold', fontSize: 8 },
+            styles: { fontStyle: 'bold', fontSize: 12 },
             body: [
                 ...dayShift
             ],
             startY: 40
         });
         let finalY = doc.lastAutoTable.finalY;
-        
-        doc.text(`Night Shift`,100,finalY+15);
-           // Or use javascript directly:
-           autoTable(doc, {
-            head: [['Index','OE', 'Side', 'Count', 'Colour','Actual Count','No of rotors','Delivery','Hours','Target',"Actual Production","Efficiency","Remarks"]],
+        doc.setFontSize(12)
+        doc.setTextColor(0, 153, 0);
+        doc.text(`Total Day PRO :${dayProTotal}`, 75, finalY + 15);
+        doc.text(`Total Day EFF Total:${dayEffTotal}%`, 150, finalY + 15);
+        doc.setFontSize(16)
+        doc.setTextColor(0, 51, 153)
+        finalY = doc.lastAutoTable.finalY;
+        doc.text(`Night Shift`, 100, finalY + 30);
+        // Or use javascript directly:
+        autoTable(doc, {
+            head: [['OE', 'Side', 'Item', 'AC', 'ROT', 'DEL', 'HRS', 'TAR', "PRO", "EFF", "Remarks"]],
             theme: 'grid',
-            styles: { fontStyle: 'bold', fontSize: 8 },
+            styles: { fontStyle: 'bold', fontSize: 12 },
             body: [
                 ...nightShift
             ],
-            startY: finalY+25
+            startY: finalY + 45
         });
-
+        doc.setFontSize(12)
+         doc.setTextColor(0, 153, 0);
         finalY = doc.lastAutoTable.finalY;
-
-        doc.text(`Final Result`,100,finalY+15);
+        doc.text(`Total Night PRO :${nightProTotal}`, 75, finalY + 15);
+        doc.text(`Total Night EFF :${nightEffTotal}%`, 150, finalY + 15);
+         doc.setTextColor(0, 51, 153)
+        doc.setFontSize(16)
+        doc.text(`Final Result`, 100, finalY + 30);
         // Or use javascript directly:
         autoTable(doc, {
-         head: [['Count', 'Colour', 'Target', 'Actual','Eff']],
-         theme: 'grid',
-         styles: { fontStyle: 'bold', fontSize: 8 },
-         body: [
-             ...finalArray
-         ],
-         startY: finalY+25
-     });
+            head: [['Item', 'TAR', 'PRO', 'EFF']],
+            theme: 'grid',
+            styles: { fontStyle: 'bold', fontSize: 12 },
+            body: [
+                ...finalArray
+            ],
+            startY: finalY + 45
+        });
+        doc.setFontSize(12);
 
+        if (finalArray.length > 0) {
+            finalEffTotal = finalEffTotal / finalArray.length;
+             finalEffTotal=round(finalEffTotal,2);
+        }
+
+        finalY = doc.lastAutoTable.finalY;
+          doc.setTextColor(0, 153, 0);
+        doc.text(`Total Final PRO :${finalProTotal}`, 75, finalY + 15);
+        doc.text(`TotalFinal EFF :${finalEffTotal}%`, 150, finalY + 15);
         //change
         doc.save(`Production_report${date.format('DD_MM_YYYY')}.pdf`)
 
