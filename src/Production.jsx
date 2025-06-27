@@ -85,10 +85,11 @@ const Production = (props) => {
     const downloadAsPDF = () => {
 
         let tableContent = tableData.map((obj) => {
-            const side = obj.SDE == 1 ? "L" : "R";
+            let side = obj.SDE == 1 ? "L" : obj.SDE == 2 ? "R" : "RL";
             const time = obj.time == 1 ? "Day" : "Night";
             const item = obj.Colour + "_" + obj.Count;
-            return [obj.OE, side, item, obj.ActualCount, obj.No_of_Rotors, obj.Delivery, obj.Hours, round(obj.Target, 2), obj.Actual_Pro, round(obj.Eff, 2) + "%", obj.remark, time]
+            side = obj.OE + "_" + side;
+            return [side, item, obj.No_of_Rotors, obj.Delivery, obj.Hours, round(obj.Target, 0), obj.Actual_Pro, round(obj.Eff, 0) + "%", obj.remark, time]
         })
         let data;
         let colorCount = new Map();
@@ -106,7 +107,7 @@ const Production = (props) => {
             }
 
         }
-        let finalProTotal = 0, finalEffTotal = 0;
+        let finalProTotal = 0, finalEffTotal = 0, finalTarTotal = 0;
 
         let finalArray = [];
         for (let [key, value] of colorCount) {
@@ -116,36 +117,44 @@ const Production = (props) => {
             //  console.log(value.Eff, total);
             total = total / (value.Eff.length);
             //  console.log(total);
-            finalProTotal += round(value.actual, 2);
-            finalEffTotal += round(total, 2);
+            finalProTotal += round(value.actual, 0);
+            finalEffTotal += round(total, 0);
+            finalTarTotal += round(value.target, 0);
             const item = value.color + "_" + value.count;
-            finalArray.push([item, round(value.target, 2), round(value.actual, 2), round(total, 2) + "%"])
+            finalArray.push([item, round(value.target, 0), round(value.actual, 0), round(total, 0) + "%"])
         }
 
+        if(finalEffTotal!==0){
+            finalEffTotal=finalEffTotal/finalArray.length;
+            finalEffTotal=round(finalEffTotal,0);
+
+        }
         const dayShift = tableContent.filter((obj) => {
-            if (obj[11] == "Night") {
+            if (obj[9] == "Night") {
                 return false;
             }
             return true;
         });
-        let dayProTotal = 0, dayEffTotal = 0;
-        let nightProTotal = 0, nightEffTotal = 0;
+        let dayProTotal = 0, dayTarTotal = 0, dayEffTotal = 0;
+        let nightProTotal = 0, nightEffTotal = 0, nightTarTotal = 0;
         tableData.map((item) => {
             if (item.time == 1) {
-                dayProTotal += parseInt(item.Actual_Pro); dayEffTotal += item.Eff;
+                dayProTotal += round(item.Actual_Pro,0); dayEffTotal += item.Eff;
+                dayTarTotal += round(item.Target,0);
             } else {
-                nightProTotal += parseInt(item.Actual_Pro); nightEffTotal += item.Eff;
+                nightProTotal += round(item.Actual_Pro,0); nightEffTotal += item.Eff;
+                nightTarTotal +=round(item.Target,0);
             }
 
         });
         if (dayShift.length > 0) {
             dayEffTotal = dayEffTotal / dayShift.length;
-             dayEffTotal=round(dayEffTotal,2);
+            dayEffTotal = round(dayEffTotal, 0);
         }
 
 
         const nightShift = tableContent.filter((obj) => {
-            if (obj[11] == "Night") {
+            if (obj[9] == "Night") {
                 return true;
             }
             return false;
@@ -154,7 +163,7 @@ const Production = (props) => {
 
         if (nightShift.length > 0) {
             nightEffTotal = nightEffTotal / nightShift.length;
-             nightEffTotal=round(nightEffTotal,2);
+            nightEffTotal = round(nightEffTotal, 0);
         }
 
 
@@ -166,10 +175,18 @@ const Production = (props) => {
         doc.text(`Date:  ${date.format('DD/MM/YYYY')}`, 60, 15);
         doc.setFontSize(16)
         doc.text(`Day Shift`, 100, 30);
-
+        if (dayTarTotal !== 0) {
+            dayShift.push([{
+                content: 'TOTAL : ',
+                colSpan: 5,
+                styles: {
+                    halign: 'right'
+                }
+            }, dayTarTotal, dayProTotal, dayEffTotal, "", "", ""])
+        }
         // Or use javascript directly:
         autoTable(doc, {
-            head: [['OE', 'Side', 'Item', 'AC', 'ROT', 'DEL', 'HRS', 'TAR', "PRO", "EFF", "Remarks"]],
+            head: [['OE', 'Item', 'ROT', 'DEL', 'HRS', 'TAR', "PRO", "EFF", "Remarks"]],
             theme: 'grid',
             styles: { fontStyle: 'bold', fontSize: 12 },
             body: [
@@ -178,33 +195,43 @@ const Production = (props) => {
             startY: 40
         });
         let finalY = doc.lastAutoTable.finalY;
-        doc.setFontSize(12)
-        doc.setTextColor(0, 153, 0);
-        doc.text(`Total Day PRO :${dayProTotal}`, 75, finalY + 15);
-        doc.text(`Total Day EFF Total:${dayEffTotal}%`, 150, finalY + 15);
+        //   doc.setFontSize(12)
+        //   doc.setTextColor(0, 153, 0);
+        //  doc.text(`Total Day PRO :${dayProTotal}`, 75, finalY + 15);
+        //  doc.text(`Total Day EFF Total:${dayEffTotal}%`, 150, finalY + 15);
         doc.setFontSize(16)
         doc.setTextColor(0, 51, 153)
         finalY = doc.lastAutoTable.finalY;
-        doc.text(`Night Shift`, 100, finalY + 30);
+        doc.text(`Night Shift`, 100, finalY + 15);
+        if (nightTarTotal !== 0) {
+            nightShift.push([{
+                content: 'TOTAL : ',
+                colSpan: 5,
+                styles: {
+                    halign: 'right'
+                }
+            }, nightTarTotal, nightProTotal, nightEffTotal, "", "", ""]);
+        }
         // Or use javascript directly:
         autoTable(doc, {
-            head: [['OE', 'Side', 'Item', 'AC', 'ROT', 'DEL', 'HRS', 'TAR', "PRO", "EFF", "Remarks"]],
+            head: [['OE', 'Item', 'ROT', 'DEL', 'HRS', 'TAR', "PRO", "EFF", "Remarks"]],
             theme: 'grid',
             styles: { fontStyle: 'bold', fontSize: 12 },
             body: [
                 ...nightShift
             ],
-            startY: finalY + 45
+            startY: finalY + 30
         });
-        doc.setFontSize(12)
-         doc.setTextColor(0, 153, 0);
+        // doc.setFontSize(12)
+        //   doc.setTextColor(0, 153, 0);
         finalY = doc.lastAutoTable.finalY;
-        doc.text(`Total Night PRO :${nightProTotal}`, 75, finalY + 15);
-        doc.text(`Total Night EFF :${nightEffTotal}%`, 150, finalY + 15);
-         doc.setTextColor(0, 51, 153)
+        // doc.text(`Total Night PRO :${nightProTotal}`, 75, finalY + 15);
+        // doc.text(`Total Night EFF :${nightEffTotal}%`, 150, finalY + 15);
+        doc.setTextColor(0, 51, 153)
         doc.setFontSize(16)
-        doc.text(`Final Result`, 100, finalY + 30);
+        doc.text(`Final Result`, 100, finalY + 15);
         // Or use javascript directly:
+        finalArray.push(["Total", finalTarTotal, finalProTotal, finalEffTotal])
         autoTable(doc, {
             head: [['Item', 'TAR', 'PRO', 'EFF']],
             theme: 'grid',
@@ -212,19 +239,19 @@ const Production = (props) => {
             body: [
                 ...finalArray
             ],
-            startY: finalY + 45
+            startY: finalY + 30
         });
         doc.setFontSize(12);
 
         if (finalArray.length > 0) {
             finalEffTotal = finalEffTotal / finalArray.length;
-             finalEffTotal=round(finalEffTotal,2);
+            finalEffTotal = round(finalEffTotal, 0);
         }
 
-        finalY = doc.lastAutoTable.finalY;
-          doc.setTextColor(0, 153, 0);
-        doc.text(`Total Final PRO :${finalProTotal}`, 75, finalY + 15);
-        doc.text(`TotalFinal EFF :${finalEffTotal}%`, 150, finalY + 15);
+        //finalY = doc.lastAutoTable.finalY;
+        //    doc.setTextColor(0, 153, 0);
+        //    doc.text(`Total Final PRO :${finalProTotal}`, 75, finalY + 15);
+        //   doc.text(`TotalFinal EFF :${finalEffTotal}%`, 150, finalY + 15);
         //change
         doc.save(`Production_report${date.format('DD_MM_YYYY')}.pdf`)
 

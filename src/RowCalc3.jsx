@@ -82,6 +82,7 @@ const RowCalc3 = (props) => {
                         >
                             <MenuItem value={1}>Left</MenuItem>
                             <MenuItem value={2}>Right</MenuItem>
+                            <MenuItem value={3}>RightLeft</MenuItem>
 
                         </Select>
                     </FormControl>
