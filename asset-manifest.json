@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/SBMCalculator/static/css/main.073c9b0a.css",
-    "main.js": "/SBMCalculator/static/js/main.1dc1309a.js",
+    "main.js": "/SBMCalculator/static/js/main.f440bc0f.js",
     "static/js/498.569393bf.chunk.js": "/SBMCalculator/static/js/498.569393bf.chunk.js",
     "static/js/703.18825df2.chunk.js": "/SBMCalculator/static/js/703.18825df2.chunk.js",
     "static/js/984.5df19ca9.chunk.js": "/SBMCalculator/static/js/984.5df19ca9.chunk.js",
@@ -9,7 +9,7 @@
     "static/media/mills_logo.png": "/SBMCalculator/static/media/mills_logo.101fadbddf4f0d46f91f.png",
     "index.html": "/SBMCalculator/index.html",
     "main.073c9b0a.css.map": "/SBMCalculator/static/css/main.073c9b0a.css.map",
-    "main.1dc1309a.js.map": "/SBMCalculator/static/js/main.1dc1309a.js.map",
+    "main.f440bc0f.js.map": "/SBMCalculator/static/js/main.f440bc0f.js.map",
     "498.569393bf.chunk.js.map": "/SBMCalculator/static/js/498.569393bf.chunk.js.map",
     "703.18825df2.chunk.js.map": "/SBMCalculator/static/js/703.18825df2.chunk.js.map",
     "984.5df19ca9.chunk.js.map": "/SBMCalculator/static/js/984.5df19ca9.chunk.js.map",
@@ -17,6 +17,6 @@
   },
   "entrypoints": [
     "static/css/main.073c9b0a.css",
-    "static/js/main.1dc1309a.js"
+    "static/js/main.f440bc0f.js"
   ]
 }
