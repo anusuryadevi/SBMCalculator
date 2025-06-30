@@ -109,7 +109,7 @@ const RowCalc3 = (props) => {
                     <TextField label="Delivery" color="secondary" focused value={Delivery} sx={{ width: '30%' }} onChange={(e) => handleChangeLocal(key, { ...rowData, Delivery: e.target.value })} error={isValid(Delivery)}/>
                     <TextField label="Hours" color="secondary" focused value={Hours} sx={{ width: '30%' }} onChange={(e) => handleChangeLocal(key, { ...rowData, Hours: e.target.value })} error={isValid(Hours)}/>
                     <TextField label="Actual_Pro" color="secondary" focused value={Actual_Pro} sx={{ width: '30%' }} onChange={(e) => handleChangeLocal(key, { ...rowData, Actual_Pro: e.target.value })} error={isValid(Actual_Pro)}/>
-                    <TextField label="Remarks" color="secondary" focused value={remark} sx={{ width: '60%' }} onChange={(e) => handleChangeLocal(key, { ...rowData, remark: e.target.value })} />
+                    {/* <TextField label="Remarks" color="secondary" focused value={remark} sx={{ width: '60%' }} onChange={(e) => handleChangeLocal(key, { ...rowData, remark: e.target.value })} /> */}
                 </Box>
                 <Box sx={{
                     display: 'flex',
