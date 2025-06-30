@@ -89,7 +89,7 @@ const Production = (props) => {
             const time = obj.time == 1 ? "Day" : "Night";
             const item = obj.Colour + "_" + obj.Count;
             side = obj.OE + "_" + side;
-            return [side, item, obj.No_of_Rotors, obj.Delivery, obj.Hours, round(obj.Target, 0), obj.Actual_Pro, round(obj.Eff, 0) + "%", obj.remark, time]
+            return [side, item, obj.No_of_Rotors, obj.Delivery, obj.Hours, round(obj.Target, 0), obj.Actual_Pro, round(obj.Eff, 0) + "%", time]
         })
         let data;
         let colorCount = new Map();
@@ -124,13 +124,13 @@ const Production = (props) => {
             finalArray.push([item, round(value.target, 0), round(value.actual, 0), round(total, 0) + "%"])
         }
 
-        if(finalEffTotal!==0){
-            finalEffTotal=finalEffTotal/finalArray.length;
-            finalEffTotal=round(finalEffTotal,0);
+        if (finalEffTotal !== 0) {
+            finalEffTotal = finalEffTotal / finalArray.length;
+            finalEffTotal = round(finalEffTotal, 0);
 
         }
         const dayShift = tableContent.filter((obj) => {
-            if (obj[9] == "Night") {
+            if (obj[8] == "Night") {
                 return false;
             }
             return true;
@@ -139,11 +139,11 @@ const Production = (props) => {
         let nightProTotal = 0, nightEffTotal = 0, nightTarTotal = 0;
         tableData.map((item) => {
             if (item.time == 1) {
-                dayProTotal += round(item.Actual_Pro,0); dayEffTotal += item.Eff;
-                dayTarTotal += round(item.Target,0);
+                dayProTotal += round(item.Actual_Pro, 0); dayEffTotal += item.Eff;
+                dayTarTotal += round(item.Target, 0);
             } else {
-                nightProTotal += round(item.Actual_Pro,0); nightEffTotal += item.Eff;
-                nightTarTotal +=round(item.Target,0);
+                nightProTotal += round(item.Actual_Pro, 0); nightEffTotal += item.Eff;
+                nightTarTotal += round(item.Target, 0);
             }
 
         });
@@ -154,7 +154,7 @@ const Production = (props) => {
 
 
         const nightShift = tableContent.filter((obj) => {
-            if (obj[9] == "Night") {
+            if (obj[8] == "Night") {
                 return true;
             }
             return false;
@@ -180,15 +180,36 @@ const Production = (props) => {
                 content: 'TOTAL : ',
                 colSpan: 5,
                 styles: {
-                    halign: 'right'
+                    halign: 'right',
+                    textColor: 'red'
                 }
-            }, dayTarTotal, dayProTotal, dayEffTotal, "", "", ""])
+            }, {
+                content: dayTarTotal,
+                styles: {
+                    textColor: 'red',
+                     fontSize:20
+                }
+            },
+            {
+                content: dayProTotal,
+                styles: {
+                    textColor: 'red',
+                     fontSize:20
+                }
+            },
+            {
+                content: dayEffTotal,
+                styles: {
+                    textColor: 'red',
+                     fontSize:20
+                }
+            }, "", "", ""])
         }
         // Or use javascript directly:
         autoTable(doc, {
-            head: [['OE', 'Item', 'ROT', 'DEL', 'HRS', 'TAR', "PRO", "EFF", "Remarks"]],
+            head: [['OE', 'Item', 'ROT', 'DEL', 'HRS', 'TAR', "PRO", "EFF"]],
             theme: 'grid',
-            styles: { fontStyle: 'bold', fontSize: 12 },
+            styles: { fontStyle: 'bold', fontSize: 16 },
             body: [
                 ...dayShift
             ],
@@ -208,15 +229,34 @@ const Production = (props) => {
                 content: 'TOTAL : ',
                 colSpan: 5,
                 styles: {
-                    halign: 'right'
+                    halign: 'right',
+                    textColor: 'red'
                 }
-            }, nightTarTotal, nightProTotal, nightEffTotal, "", "", ""]);
+            }, {
+                content: nightTarTotal, styles: {
+                    textColor: 'red',
+                     fontSize:20
+                }
+            }, {
+                content: nightProTotal,
+                styles: {
+                    textColor: 'red',
+                     fontSize:20
+                }
+            },
+            {
+                content: nightEffTotal,
+                styles: {
+                    textColor: 'red',
+                     fontSize:20
+                }
+            }, "", "", ""]);
         }
         // Or use javascript directly:
         autoTable(doc, {
-            head: [['OE', 'Item', 'ROT', 'DEL', 'HRS', 'TAR', "PRO", "EFF", "Remarks"]],
+            head: [['OE', 'Item', 'ROT', 'DEL', 'HRS', 'TAR', "PRO", "EFF"]],
             theme: 'grid',
-            styles: { fontStyle: 'bold', fontSize: 12 },
+            styles: { fontStyle: 'bold', fontSize: 16 },
             body: [
                 ...nightShift
             ],
@@ -229,17 +269,44 @@ const Production = (props) => {
         // doc.text(`Total Night EFF :${nightEffTotal}%`, 150, finalY + 15);
         doc.setTextColor(0, 51, 153)
         doc.setFontSize(16)
-        doc.text(`Final Result`, 100, finalY + 15);
+        doc.text(`Final Result`, 50, finalY + 15);
         // Or use javascript directly:
-        finalArray.push(["Total", finalTarTotal, finalProTotal, finalEffTotal])
+        finalArray.push([{
+            content: "Total",
+            styles: {
+                textColor: 'red',
+                fontSize:16
+            }
+        }, {
+            content: finalTarTotal,
+            styles: {
+                textColor: 'red',
+                fontSize:20
+            }
+        },
+            {
+                content: finalProTotal,
+                styles: {
+                    textColor: 'red',
+                     fontSize:20
+                }
+            },
+            {
+                content: finalEffTotal,
+                styles: {
+                    textColor: 'red',
+                     fontSize:20
+                }
+            },])
         autoTable(doc, {
             head: [['Item', 'TAR', 'PRO', 'EFF']],
             theme: 'grid',
-            styles: { fontStyle: 'bold', fontSize: 12 },
+            styles: { fontStyle: 'bold', fontSize: 16 },
             body: [
                 ...finalArray
             ],
-            startY: finalY + 30
+            startY: finalY + 30,
+            tableWidth:120
         });
         doc.setFontSize(12);
 
