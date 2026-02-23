@@ -156,7 +156,7 @@ const Calc = (props) => {
    
     const downloadAsPDF = () => {
         let tableContent = tableData.map((obj, index) => {
-            return [index + 1, obj.count, obj.strength, obj.csp]
+            return [index + 1, obj.count, obj.strength, round(obj.csp, 2)]
         })
 
         const doc = new jsPDF()
